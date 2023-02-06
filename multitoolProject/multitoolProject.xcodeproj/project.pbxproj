@@ -9,21 +9,23 @@
 /* Begin PBXBuildFile section */
 		F68F222E299195260074AC9C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68F222D299195260074AC9C /* AppDelegate.swift */; };
 		F68F2230299195260074AC9C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68F222F299195260074AC9C /* SceneDelegate.swift */; };
-		F68F2232299195260074AC9C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68F2231299195260074AC9C /* ViewController.swift */; };
+		F68F2232299195260074AC9C /* BlurViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68F2231299195260074AC9C /* BlurViewController.swift */; };
 		F68F2235299195260074AC9C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F68F2233299195260074AC9C /* Main.storyboard */; };
 		F68F2237299195270074AC9C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F68F2236299195270074AC9C /* Assets.xcassets */; };
 		F68F223A299195270074AC9C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F68F2238299195270074AC9C /* LaunchScreen.storyboard */; };
+		F68F2242299197C20074AC9C /* DataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68F2241299197C20074AC9C /* DataViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		F68F222A299195260074AC9C /* multitoolProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = multitoolProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F68F222D299195260074AC9C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F68F222F299195260074AC9C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		F68F2231299195260074AC9C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F68F2231299195260074AC9C /* BlurViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurViewController.swift; sourceTree = "<group>"; };
 		F68F2234299195260074AC9C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F68F2236299195270074AC9C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F68F2239299195270074AC9C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F68F223B299195270074AC9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F68F2241299197C20074AC9C /* DataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,7 +60,8 @@
 			children = (
 				F68F222D299195260074AC9C /* AppDelegate.swift */,
 				F68F222F299195260074AC9C /* SceneDelegate.swift */,
-				F68F2231299195260074AC9C /* ViewController.swift */,
+				F68F2231299195260074AC9C /* BlurViewController.swift */,
+				F68F2241299197C20074AC9C /* DataViewController.swift */,
 				F68F2233299195260074AC9C /* Main.storyboard */,
 				F68F2236299195270074AC9C /* Assets.xcassets */,
 				F68F2238299195270074AC9C /* LaunchScreen.storyboard */,
@@ -138,7 +141,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F68F2232299195260074AC9C /* ViewController.swift in Sources */,
+				F68F2242299197C20074AC9C /* DataViewController.swift in Sources */,
+				F68F2232299195260074AC9C /* BlurViewController.swift in Sources */,
 				F68F222E299195260074AC9C /* AppDelegate.swift in Sources */,
 				F68F2230299195260074AC9C /* SceneDelegate.swift in Sources */,
 			);
