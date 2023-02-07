@@ -15,7 +15,9 @@ class BlurViewController: UIViewController {
     var requestedImages = [UIImage]()
     var requestedAssets = [PHAsset]()
     let cellReuseIdentifier = "CustomCell"
+    var selectedImage = 0
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet var tableView: UITableView!
     @IBOutlet weak var loadBtn: UIButton!
     @IBOutlet weak var saveBtn: UIButton!
@@ -24,6 +26,7 @@ class BlurViewController: UIViewController {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        activityIndicator.isHidden = true
         deactivate(saveBtn)
     }
     
@@ -46,7 +49,11 @@ class BlurViewController: UIViewController {
     @IBAction func loadImages(_ sender: UIButton) {
         let fetchOptions: PHFetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        DispatchQueue.global().async {
+        let faceDetectionRequest = VNDetectFaceLandmarksRequest(completionHandler: handleFaceDetection)
+        faceDetectionRequest.usesCPUOnly = true
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+        DispatchQueue.global(qos: .userInteractive).async {
             let fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
             if(fetchResult.count > 0){
                 for imageID in 0..<fetchResult.count{
@@ -54,80 +61,70 @@ class BlurViewController: UIViewController {
                     self.requestedAssets.append(asset)
                     let uiAsset = asset.requestImage()
                     self.requestedImages.append(self.resize(image: uiAsset))
+                    let handler = VNImageRequestHandler(cgImage: self.requestedImages[imageID].cgImage!, options: [:])
+                    do {
+                        try handler.perform([faceDetectionRequest])
+                        self.selectedImage += 1
+                    } catch let error as NSError {
+                        print("Error: \(error)")
+                        fatalError()
+                    }
+                }
+                DispatchQueue.main.sync {
+                    self.tableView.reloadData()
+                    self.activate(self.saveBtn)
+                    self.activityIndicator.stopAnimating()
+                    self.activityIndicator.isHidden = true
                 }
             }
-            DispatchQueue.main.sync {
-                self.tableView.reloadData()
-                self.activate(self.saveBtn)
-            }
         }
-        
-
-    /*    let faceDetectionRequest = VNDetectFaceLandmarksRequest(completionHandler: handleFaceDetection)
-        faceDetectionRequest.usesCPUOnly = true
-        
-        //create request handler
-        let handler = VNImageRequestHandler(cgImage: image.cgImage!, options: [:])
-        
-        DispatchQueue.global().async {
-            do {
-                //send requests to handler
-                try handler.perform([faceDetectionRequest])
-            } catch let error as NSError {
-                print("Error: \(error)")
-                fatalError()
-            }
-        }*/
     }
     
     func handleFaceDetection(request: VNRequest, error: Error?) {
-        var resultInfo = ""
-        var img = UIImage()
         if request.results != nil {
             for ob in request.results as! [VNFaceObservation] {
-                /*DispatchQueue.main.sync {
-                    img = self.imageView.image!
-                }*/
-                resultInfo += "face at \(ob.boundingBox)\n"
-                showImage(img: drawObservationOnImage(ob, img))
+                requestedImages[self.selectedImage] = drawObservationOnImage(ob, requestedImages[self.selectedImage])
             }
         } else {
             print("no face found")
         }
     }
     
-    func showImage(img: UIImage) {
-        /*DispatchQueue.main.sync {
-            self.imageView.image = img
-            self.imageView.setNeedsDisplay()
-        }*/
-    }
-    
     func drawObservationOnImage(_ face: VNFaceObservation, _ image: UIImage) -> UIImage{
         UIGraphicsBeginImageContextWithOptions(image.size, true, 0.0)
         let context = UIGraphicsGetCurrentContext()
 
-        // draw the image
         image.draw(in: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height))
 
         context?.translateBy(x: 0, y: image.size.height)
         context?.scaleBy(x: 1.0, y: -1.0)
 
-        // draw the face rect
         let w = face.boundingBox.size.width * image.size.width
         let h = face.boundingBox.size.height * image.size.height
         let x = face.boundingBox.origin.x * image.size.width
         let y = face.boundingBox.origin.y * image.size.height
         let faceRect = CGRect(x: x, y: y, width: w, height: h)
+        
+        let blur = CIFilter(name: "CICrystallize")
+        
+        var editedImage = image
+        if(image.cgImage != nil){
+            let ciImage = CIImage(cgImage: image.cgImage!)
+            blur?.setValue(ciImage, forKey: kCIInputImageKey)
+            blur?.setValue(25.0, forKey: kCIInputRadiusKey)
+            if let output = blur?.outputImage{
+                editedImage = UIImage(ciImage: output)
+            }
+        }
         context?.saveGState()
         context?.setStrokeColor(UIColor.red.cgColor)
-        context?.setLineWidth(10)
+        context?.setLineWidth(5)
         context?.addRect(faceRect)
         context?.drawPath(using: .stroke)
         
         let result = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return result!
+        return editedImage
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?){
@@ -170,7 +167,6 @@ extension PHAsset {
         })*/
         imageManager.requestImageDataAndOrientation(for: self, options: options, resultHandler:    {(providedData, _, _, _) in
             requestedImage = UIImage(data: providedData!)!
-            print(requestedImage)
         })
         return requestedImage
     }

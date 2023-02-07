@@ -95,24 +95,32 @@
                                     </button>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="1si-8H-hNe">
+                                <rect key="frame" x="25" y="659" width="343" height="40"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="g6i-mq-ZIL"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="g6i-mq-ZIL" firstAttribute="trailing" secondItem="TTa-oB-I9H" secondAttribute="trailing" constant="25" id="0o7-vV-X1U"/>
+                            <constraint firstItem="1si-8H-hNe" firstAttribute="leading" secondItem="g6i-mq-ZIL" secondAttribute="leading" constant="25" id="4ih-3e-7Vx"/>
                             <constraint firstItem="g6i-mq-ZIL" firstAttribute="trailing" secondItem="6oE-Vb-Nzg" secondAttribute="trailing" constant="25" id="7iN-Xi-uzA"/>
                             <constraint firstItem="6oE-Vb-Nzg" firstAttribute="leading" secondItem="g6i-mq-ZIL" secondAttribute="leading" constant="25" id="C1t-FG-EnX"/>
                             <constraint firstItem="XQu-6Q-SgX" firstAttribute="leading" secondItem="g6i-mq-ZIL" secondAttribute="leading" constant="25" id="EtD-iu-feu"/>
                             <constraint firstItem="6oE-Vb-Nzg" firstAttribute="top" secondItem="TTa-oB-I9H" secondAttribute="bottom" constant="50" id="HrD-Ck-WAs"/>
+                            <constraint firstItem="6oE-Vb-Nzg" firstAttribute="top" secondItem="1si-8H-hNe" secondAttribute="bottom" constant="5" id="MYX-fo-32Z"/>
+                            <constraint firstItem="g6i-mq-ZIL" firstAttribute="trailing" secondItem="1si-8H-hNe" secondAttribute="trailing" constant="25" id="PVG-nD-tKS"/>
                             <constraint firstItem="g6i-mq-ZIL" firstAttribute="trailing" secondItem="XQu-6Q-SgX" secondAttribute="trailing" constant="25" id="SJn-BG-nlT"/>
                             <constraint firstItem="6oE-Vb-Nzg" firstAttribute="bottom" secondItem="g6i-mq-ZIL" secondAttribute="bottom" constant="-25" id="TSb-kN-9lf"/>
                             <constraint firstItem="TTa-oB-I9H" firstAttribute="top" secondItem="XQu-6Q-SgX" secondAttribute="bottom" constant="25" id="TqR-Be-eNn"/>
                             <constraint firstItem="TTa-oB-I9H" firstAttribute="leading" secondItem="g6i-mq-ZIL" secondAttribute="leading" constant="25" id="Znx-ZC-Zna"/>
+                            <constraint firstItem="1si-8H-hNe" firstAttribute="top" secondItem="TTa-oB-I9H" secondAttribute="bottom" constant="5" id="oOT-sb-q6w"/>
                             <constraint firstItem="XQu-6Q-SgX" firstAttribute="top" secondItem="g6i-mq-ZIL" secondAttribute="top" constant="20" id="ovt-tR-mOT"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="j8x-nu-qkg"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="1si-8H-hNe" id="pzY-eJ-vyu"/>
                         <outlet property="loadBtn" destination="uCh-Xx-SO9" id="Net-7b-bow"/>
                         <outlet property="saveBtn" destination="x4E-d0-VVP" id="G5i-za-dnb"/>
                         <outlet property="tableView" destination="TTa-oB-I9H" id="3yY-Az-rmM"/>
