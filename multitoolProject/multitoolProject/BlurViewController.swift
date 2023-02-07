@@ -82,49 +82,72 @@ class BlurViewController: UIViewController {
     
     func handleFaceDetection(request: VNRequest, error: Error?) {
         if request.results != nil {
-            for ob in request.results as! [VNFaceObservation] {
-                requestedImages[self.selectedImage] = drawObservationOnImage(ob, requestedImages[self.selectedImage])
-            }
+            requestedImages[self.selectedImage] = drawObservationOnImage(request.results as! [VNFaceObservation], requestedImages[self.selectedImage])
         } else {
             print("no face found")
         }
     }
     
-    func drawObservationOnImage(_ face: VNFaceObservation, _ image: UIImage) -> UIImage{
+    func drawObservationOnImage(_ faces: [VNFaceObservation], _ image: UIImage) -> UIImage{
+        var newImage = image
+        var finalImage = CIImage()
+        
         UIGraphicsBeginImageContextWithOptions(image.size, true, 0.0)
         let context = UIGraphicsGetCurrentContext()
-
         image.draw(in: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height))
-
         context?.translateBy(x: 0, y: image.size.height)
         context?.scaleBy(x: 1.0, y: -1.0)
+                   
+        for face in faces {
+            let w = face.boundingBox.size.width * image.size.width
+            let h = face.boundingBox.size.height * image.size.height
+            let x = face.boundingBox.origin.x * image.size.width
+            let y = face.boundingBox.origin.y * image.size.height
+            
+            let faceRect = UIImageView(frame: CGRect(x: x, y: y, width: w, height: h))
+            
+            let faceMask = CIImage(color: CIColor(red: 1, green: 1, blue: 1, alpha: 1)).cropped(to: faceRect)
+            newImage = applyMaskedVariableBlur(image: newImage, mask: faceMask)
+            faceMask.applyingGaussianBlur(sigma: 30.0)
 
-        let w = face.boundingBox.size.width * image.size.width
-        let h = face.boundingBox.size.height * image.size.height
-        let x = face.boundingBox.origin.x * image.size.width
-        let y = face.boundingBox.origin.y * image.size.height
-        let faceRect = CGRect(x: x, y: y, width: w, height: h)
-        
-        let blur = CIFilter(name: "CICrystallize")
-        
-        var editedImage = image
-        if(image.cgImage != nil){
-            let ciImage = CIImage(cgImage: image.cgImage!)
-            blur?.setValue(ciImage, forKey: kCIInputImageKey)
-            blur?.setValue(25.0, forKey: kCIInputRadiusKey)
-            if let output = blur?.outputImage{
-                editedImage = UIImage(ciImage: output)
-            }
+            context?.saveGState()
+            context?.setStrokeColor(UIColor.red.cgColor)
+            context?.setLineWidth(5)
+            context?.addRect(faceRect)
         }
-        context?.saveGState()
-        context?.setStrokeColor(UIColor.red.cgColor)
-        context?.setLineWidth(5)
-        context?.addRect(faceRect)
+
         context?.drawPath(using: .stroke)
-        
         let result = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return editedImage
+        return result!
+        
+        
+        
+//        return UIImage(ciImage: finalImage)
+    }
+    
+
+    
+    func applyMaskedVariableBlur(image:UIImage, mask:CIImage) -> UIImage {
+
+        let filter = CIFilter(name: "CIMaskedVariableBlur")
+
+        // convert UIImages to CIImages and set as input
+
+        let ciInput = CIImage(image: image)
+        let ciMask = mask
+        filter?.setValue(ciInput, forKey: "inputImage")
+        filter?.setValue(ciMask, forKey: "inputMask")
+
+        // get output CIImage, render as CGImage first to retain proper UIImage scale
+        
+        
+        
+        let ciOutput = filter?.outputImage
+        let ciContext = CIContext()
+        let cgImage = ciContext.createCGImage(ciOutput!, from: (ciOutput?.extent)!)
+
+        return UIImage(cgImage: cgImage!)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?){
@@ -210,4 +233,17 @@ extension BlurViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    
+    
+}
+
+extension UIImage{
+    func drawImageInRect(inputImage: UIImage, inRect imageRect: CGRect) -> UIImage {
+        UIGraphicsBeginImageContext(self.size)
+        self.draw(in: CGRect(x: 0.0, y: 0.0, width: self.size.width, height: self.size.height))
+        inputImage.draw(in: imageRect)
+        guard let newImage = UIGraphicsGetImageFromCurrentImageContext() else { return UIImage() }
+        UIGraphicsEndImageContext()
+        return newImage
+    }
 }
