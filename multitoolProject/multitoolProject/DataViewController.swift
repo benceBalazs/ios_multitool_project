@@ -14,9 +14,24 @@ class DataViewController: UIViewController {
     @IBOutlet weak var livePhoto: UILabel!
     @IBOutlet weak var commonPhoto: UILabel!
     
+    @IBOutlet weak var commonPhotoStorage: UILabel!
+    @IBOutlet weak var livePhotoStorage: UILabel!
+    @IBOutlet weak var panoramaStorage: UILabel!
+    @IBOutlet weak var videoStorage: UILabel!
+    
     @IBAction func loadEverything(_ sender: UIButton) {
         commonPhoto.text = "TestText"
         loadAllInformations()
+        var cap = getStorageCapacity()
+        print("Capacity : \(cap) MiB")
+        var freeCap = getFreeStorageCapacity()
+        print("Free capacity : \(freeCap) MiB")
+
+
+    }
+    
+    @IBAction func deleteEverything(_ sender: UIButton) {
+        deleteAllImages()
     }
     
     override func viewDidLoad() {
@@ -32,9 +47,11 @@ class DataViewController: UIViewController {
         let fetchResultImage = PHAsset.fetchAssets(with: .image, options: fetchOptionsImage)
         
         //Debug Data
+        /*
         let fetchOptions = PHFetchOptions()
         fetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
         let fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+         */
         
         //Panorama Data
         let panoOptions = PHFetchOptions()
@@ -51,20 +68,27 @@ class DataViewController: UIViewController {
         fetchOptionsVideo.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.video.rawValue)
         let fetchResultVideo = PHAsset.fetchAssets(with: .video, options: fetchOptionsVideo)
         
+        /*
         print("Debug \(fetchResult.count)")
         iterateOverMediatype(fetchResult)
-        
+        */
+         
         print("Image \(fetchResultImage.count)")
         iterateOverMediatype(fetchResultImage)
+        commonPhoto.text = "Normal images: \(fetchResultImage.count)"
         
         print("Pano \(fetchResultPano.count)")
         iterateOverMediatype(fetchResultPano)
+        panorama.text = "Panorama images: \(fetchResultPano.count)"
 
         print("LivePhoto \(fetchResultLivePhoto.count)")
         iterateOverMediatype(fetchResultLivePhoto)
-        
+        livePhoto.text = "Live images: \(fetchResultLivePhoto.count)"
+
         print("Video \(fetchResultVideo.count)")
         getMemoryUsageVideo(fetchResultVideo)
+        video.text = "Videos: \(fetchResultVideo.count)"
+
     }
     
     func iterateOverMediatype(_ fetchResult: PHFetchResult<PHAsset>){
@@ -75,6 +99,7 @@ class DataViewController: UIViewController {
                 //Byte to MiB
                 let fileSize = (Double(memoryUsage) / 1048576.0)
                 print(fileSize)
+                print(asset.value(forKey: "filename") as? String ?? "Nil")
             }
             
         }else{
@@ -107,5 +132,55 @@ class DataViewController: UIViewController {
         } else {
             print("no videos found")
         }
+    }
+    
+    func deleteAllImages(){
+        let fetchOptions = PHFetchOptions()
+        let fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+
+        var assetsToDelete = [PHAsset]()
+        fetchResult.enumerateObjects { (asset, _, _) in
+            assetsToDelete.append(asset)
+        }
+        
+        PHPhotoLibrary.shared().performChanges({
+            PHAssetChangeRequest.deleteAssets(assetsToDelete as NSArray)
+        }, completionHandler: {success, error in
+            if success {
+                print("All photos deleted successfully")
+            } else {
+                print("Error deleting photos")
+            }
+        })
+    }
+    
+    func getStorageCapacity() -> Int{
+        let fileManager = FileManager.default
+        
+        do{
+            let attributes = try fileManager.attributesOfFileSystem(forPath: NSHomeDirectory() as String)
+            let totalSpace = attributes[FileAttributeKey.systemSize] as? NSNumber
+            let spaceInBytes = totalSpace?.int64Value
+            print("Total space: \(spaceInBytes ==  0) bytes")
+            return Int(spaceInBytes! / 1048576)
+        } catch {
+            print("Error reading file system attributes: \(error)")
+        }
+        return 0
+    }
+    
+    func getFreeStorageCapacity() -> Int{
+        let fileManager = FileManager.default
+        
+        do{
+            let attributes = try fileManager.attributesOfFileSystem(forPath: NSHomeDirectory() as String)
+            let totalSpace = attributes[FileAttributeKey.systemFreeSize] as? NSNumber
+            let spaceInBytes = totalSpace?.int64Value
+            print("Total space: \(spaceInBytes ==  0) bytes")
+            return Int(spaceInBytes! / 1048576)
+        } catch {
+            print("Error reading file system attributes: \(error)")
+        }
+        return 0
     }
 }
