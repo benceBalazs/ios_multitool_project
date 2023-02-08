@@ -122,30 +122,6 @@ class BlurViewController: UIViewController {
         return resultImage
     }
     
-
-    
-    func applyMaskedVariableBlur(image:UIImage, mask:CIImage) -> UIImage {
-
-        let filter = CIFilter(name: "CIMaskedVariableBlur")
-
-        // convert UIImages to CIImages and set as input
-
-        let ciInput = CIImage(image: image)
-        let ciMask = mask
-        filter?.setValue(ciInput, forKey: "inputImage")
-        filter?.setValue(ciMask, forKey: "inputMask")
-
-        // get output CIImage, render as CGImage first to retain proper UIImage scale
-        
-        
-        
-        let ciOutput = filter?.outputImage
-        let ciContext = CIContext()
-        let cgImage = ciContext.createCGImage(ciOutput!, from: (ciOutput?.extent)!)
-
-        return UIImage(cgImage: cgImage!)
-    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?){
         if segue.identifier == "showDetailedImage" {
             //let controller = segue.destination
@@ -233,13 +209,3 @@ extension BlurViewController: UITableViewDelegate, UITableViewDataSource {
     
 }
 
-extension UIImage{
-    func drawImageInRect(inputImage: UIImage, inRect imageRect: CGRect) -> UIImage {
-        UIGraphicsBeginImageContext(self.size)
-        self.draw(in: CGRect(x: 0.0, y: 0.0, width: self.size.width, height: self.size.height))
-        inputImage.draw(in: imageRect)
-        guard let newImage = UIGraphicsGetImageFromCurrentImageContext() else { return UIImage() }
-        UIGraphicsEndImageContext()
-        return newImage
-    }
-}
