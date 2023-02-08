@@ -89,41 +89,37 @@ class BlurViewController: UIViewController {
     }
     
     func drawObservationOnImage(_ faces: [VNFaceObservation], _ image: UIImage) -> UIImage{
-        var newImage = image
-        var finalImage = CIImage()
-        
-        UIGraphicsBeginImageContextWithOptions(image.size, true, 0.0)
-        let context = UIGraphicsGetCurrentContext()
-        image.draw(in: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height))
-        context?.translateBy(x: 0, y: image.size.height)
-        context?.scaleBy(x: 1.0, y: -1.0)
-                   
-        for face in faces {
-            let w = face.boundingBox.size.width * image.size.width
-            let h = face.boundingBox.size.height * image.size.height
-            let x = face.boundingBox.origin.x * image.size.width
-            let y = face.boundingBox.origin.y * image.size.height
-            
-            let faceRect = UIImageView(frame: CGRect(x: x, y: y, width: w, height: h))
-            
-            let faceMask = CIImage(color: CIColor(red: 1, green: 1, blue: 1, alpha: 1)).cropped(to: faceRect)
-            newImage = applyMaskedVariableBlur(image: newImage, mask: faceMask)
-            faceMask.applyingGaussianBlur(sigma: 30.0)
+        // Create a CIImage from the input image
+        var ciImage = CIImage(cgImage: image.cgImage!)
 
-            context?.saveGState()
-            context?.setStrokeColor(UIColor.red.cgColor)
-            context?.setLineWidth(5)
-            context?.addRect(faceRect)
+        // Create a CIFilter to apply the blur effect
+        let blurFilter = CIFilter(name: "CIGaussianBlur")!
+        blurFilter.setValue(ciImage, forKey: kCIInputImageKey)
+
+        for face in faces {
+            // Create a CGRect to represent the face bounds
+            let faceBounds = face.boundingBox
+            let faceRect = CGRect(x: faceBounds.origin.x * ciImage.extent.size.width,
+                                 y: (faceBounds.origin.y) * ciImage.extent.size.height,
+                                 width: faceBounds.size.width * ciImage.extent.size.width,
+                                 height: faceBounds.size.height * ciImage.extent.size.height)
+
+            // Create a CIImage to represent the face region
+            let faceImage = ciImage.cropped(to: faceRect)
+
+            // Apply the blur effect to the face region
+            blurFilter.setValue(10, forKey: kCIInputRadiusKey)
+            let blurredFaceImage = blurFilter.outputImage!.cropped(to: faceRect)
+
+            // Combine the blurred face region with the original image
+            ciImage = blurredFaceImage.composited(over: ciImage)
         }
 
-        context?.drawPath(using: .stroke)
-        let result = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return result!
-        
-        
-        
-//        return UIImage(ciImage: finalImage)
+        // Convert the blended CIImage back to a UIImage
+        let resultImage = UIImage(ciImage: ciImage)
+
+        // Update the image view with the result image
+        return resultImage
     }
     
 
