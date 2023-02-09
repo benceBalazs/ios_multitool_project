@@ -13,6 +13,8 @@ class BlurViewController: UIViewController {
     
     var requestedImages: [UIImage]!
     var validImages: [UIImage]!
+    var requestedTitles: [String]!
+    var validTitles: [String]!
     let cellReuseIdentifier = "faceCell"
     var selectedImage: Int!
     
@@ -33,21 +35,11 @@ class BlurViewController: UIViewController {
     func deactivate(_ btn: UIButton){
         btn.isUserInteractionEnabled = false
         btn.isHidden = true
-        //btn.backgroundColor = UIColor.gray
     }
     
     func activate(_ btn: UIButton){
         btn.isUserInteractionEnabled = true
         btn.isHidden = false
-        //btn.backgroundColor = UIColor.systemBlue
-    }
-    
-    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
-        if let error = error {
-            showAlertWith(title: "Save error", message: error.localizedDescription)
-        } else {
-            showAlertWith(title: "Saved!", message: "Your image has been saved to your photos.")
-        }
     }
 
     func showAlertWith(title: String, message: String){
@@ -57,42 +49,47 @@ class BlurViewController: UIViewController {
     }
     
     @IBAction func saveImages(_ sender: UIButton) {
-        
-        UIImageWriteToSavedPhotosAlbum(self.validImages[0], self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
-        //PHPhotoLibrary.requestAuthorization { status in
-        //    if status == .authorized {
-                //for index in 0..<validImages.count {
-        
-        
-        /*let jpegImg = self.validImages[0].jpegData(compressionQuality: 1.0)
-        let filename = "NewImage\(0)"
-        let baseUrl = FileManager.default.urls(for: .picturesDirectory, in: .userDomainMask).first!
-        let imgUrl = baseUrl.appendingPathComponent(filename)
-        do {
-            try jpegImg?.write(to: imgUrl)
-            print("Success")
-        } catch {
-            print("Error saving the image to the photo gallery")
-        }*/
-        
-        
-                /*PHPhotoLibrary.shared().performChanges({
-                    PHAssetChangeRequest.cre(from: self.validImages[0])
-                }) { success, error in
-                    if success {
-                        print("The image was saved to the photo gallery.")
-                    } else {
-                        print("Error saving the image to the photo gallery: \(error.debugDescription)")
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+        PHPhotoLibrary.requestAuthorization { status in
+            if status == .authorized {
+                for index in 0..<self.validImages.count {
+                    let imageData = self.validImages[index].jpegData(compressionQuality: 1.0)!
+                    let fileURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(self.validTitles[index]).jpeg")
+                    try? imageData.write(to: fileURL)
+                    PHPhotoLibrary.requestAuthorization { status in
+                        if status == .authorized {
+                            PHPhotoLibrary.shared().performChanges({
+                                PHAssetCreationRequest.creationRequestForAssetFromImage(atFileURL: fileURL)
+                            }) { success, error in
+                                if success {
+                                    print("The image was saved to the photo gallery.")
+                                } else {
+                                    print("Error saving the image to the photo gallery: \(error?.localizedDescription ?? "")")
+                                }
+                            }
+                        }
                     }
-                }*/
-                //}
-          //  }
-       // }
+                }
+                DispatchQueue.main.sync {
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                    self.showAlertWith(title: "Gallery", message: "Successfully saved all \(self.validTitles!.count) images to the gallery")
+                    self.resetData()
+                    self.tableView.reloadData()
+                    self.deactivate(self.saveBtn)
+                }
+            } else {
+                print("STATUS: \(status)")
+            }
+        }
     }
     
     func resetData() {
         self.requestedImages = [UIImage]()
         self.validImages = [UIImage]()
+        self.requestedTitles = [String]()
+        self.validTitles = [String]()
         self.selectedImage = 0
     }
     
@@ -111,6 +108,7 @@ class BlurViewController: UIViewController {
                     let asset = fetchResult.object(at: imageID)
                     let uiAsset = asset.requestImage()
                     self.requestedImages.append(uiAsset)
+                    self.requestedTitles.append("\((asset.value(forKey: "filename") as? String)!)_edited")
                     let handler = VNImageRequestHandler(cgImage: self.requestedImages[imageID].cgImage!, options: [:])
                     do {
                         try handler.perform([faceDetectionRequest])
@@ -134,6 +132,7 @@ class BlurViewController: UIViewController {
         if request.results != nil {
             if !request.results!.isEmpty {
                 self.validImages.append(drawObservationOnImage(request.results as! [VNFaceObservation], requestedImages[self.selectedImage]))
+                self.validTitles.append(self.requestedTitles[self.selectedImage])
             } else {
                 print("NOFACEFOUND")
             }
@@ -141,39 +140,25 @@ class BlurViewController: UIViewController {
     }
     
     func drawObservationOnImage(_ faces: [VNFaceObservation], _ image: UIImage) -> UIImage{
-        // Create a CIImage from the input image
         var ciImage = CIImage(cgImage: image.cgImage!)
-        
-        // Create a CIFilter to apply the blur effect
         let blurFilter = CIFilter(name: "CIGaussianBlur")!
         blurFilter.setValue(ciImage, forKey: kCIInputImageKey)
-        
         for face in faces {
-            // Create a CGRect to represent the face bounds
             let faceBounds = face.boundingBox
             let faceRect = CGRect(x: faceBounds.origin.x * ciImage.extent.size.width,
                                   y: (faceBounds.origin.y) * ciImage.extent.size.height,
                                   width: faceBounds.size.width * ciImage.extent.size.width,
                                   height: faceBounds.size.height * ciImage.extent.size.height)
-            
-            // Apply the blur effect to the face region
             blurFilter.setValue(40, forKey: kCIInputRadiusKey)
             let blurredFaceImage = blurFilter.outputImage!.cropped(to: faceRect)
-            
-            // Combine the blurred face region with the original image
             ciImage = blurredFaceImage.composited(over: ciImage)
         }
-        
-        // Convert the blended CIImage back to a UIImage
         let resultImage = UIImage(ciImage: ciImage)
-        
-        // Update the image view with the result image
         return resultImage
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?){
         if segue.identifier == "showDetailedImage" {
-            //let controller = segue.destination
             if let vc = segue.destination as? DetailedImageViewController {
                 vc.receivedImage = validImages[tableView.indexPathForSelectedRow!.row]
             }
@@ -214,14 +199,7 @@ extension BlurViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.validImages.count
     }
-    
-    // Make the background color show through
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = UIView()
-        headerView.backgroundColor = UIColor.clear
-        return headerView
-    }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell:CustomTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! CustomTableViewCell
