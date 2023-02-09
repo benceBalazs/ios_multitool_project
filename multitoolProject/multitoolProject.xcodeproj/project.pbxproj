@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F64BB7232991A59200768401 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64BB7222991A59200768401 /* CustomTableViewCell.swift */; };
+		F64BB7252991CD8A00768401 /* DetailedImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64BB7242991CD8A00768401 /* DetailedImageViewController.swift */; };
 		F68F222E299195260074AC9C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68F222D299195260074AC9C /* AppDelegate.swift */; };
 		F68F2230299195260074AC9C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68F222F299195260074AC9C /* SceneDelegate.swift */; };
 		F68F2232299195260074AC9C /* BlurViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68F2231299195260074AC9C /* BlurViewController.swift */; };
@@ -17,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F64BB7222991A59200768401 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
+		F64BB7242991CD8A00768401 /* DetailedImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedImageViewController.swift; sourceTree = "<group>"; };
 		F68F222A299195260074AC9C /* multitoolProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = multitoolProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F68F222D299195260074AC9C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F68F222F299195260074AC9C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -62,10 +66,12 @@
 				F68F222F299195260074AC9C /* SceneDelegate.swift */,
 				F68F2231299195260074AC9C /* BlurViewController.swift */,
 				F68F2241299197C20074AC9C /* DataViewController.swift */,
+				F64BB7222991A59200768401 /* CustomTableViewCell.swift */,
 				F68F2233299195260074AC9C /* Main.storyboard */,
 				F68F2236299195270074AC9C /* Assets.xcassets */,
 				F68F2238299195270074AC9C /* LaunchScreen.storyboard */,
 				F68F223B299195270074AC9C /* Info.plist */,
+				F64BB7242991CD8A00768401 /* DetailedImageViewController.swift */,
 			);
 			path = multitoolProject;
 			sourceTree = "<group>";
@@ -142,8 +148,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				F68F2242299197C20074AC9C /* DataViewController.swift in Sources */,
+				F64BB7232991A59200768401 /* CustomTableViewCell.swift in Sources */,
 				F68F2232299195260074AC9C /* BlurViewController.swift in Sources */,
 				F68F222E299195260074AC9C /* AppDelegate.swift in Sources */,
+				F64BB7252991CD8A00768401 /* DetailedImageViewController.swift in Sources */,
 				F68F2230299195260074AC9C /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
