@@ -24,9 +24,9 @@ class DataViewController: UIViewController {
     @IBAction func loadEverything(_ sender: UIButton) {
         commonPhoto.text = "TestText"
         loadAllInformations()
-        var cap = getStorageCapacity()
+        let cap = getStorageCapacity()
         print("Capacity : \(cap) MiB")
-        var freeCap = getFreeStorageCapacity()
+        let freeCap = getFreeStorageCapacity()
         print("Free capacity : \(freeCap) MiB")
     }
     
@@ -36,22 +36,14 @@ class DataViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
     
     func loadAllInformations(){
-        //Image Data
         
+        //Image Data
         let fetchOptionsImage = PHFetchOptions()
         fetchOptionsImage.sortDescriptors = [NSSortDescriptor(key:"creationDate",ascending:false)]
         let fetchResultImage = PHAsset.fetchAssets(with: .image, options: fetchOptionsImage)
-        /*
-        //Debug Data
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.predicate = NSPredicate(format: "mediaType == %d AND mediaSubtype != %d", PHAssetMediaType.image.rawValue, PHAssetMediaSubtype.photoPanorama.rawValue)
-        let fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
-         */
         
         //LivePhoto Data
         let livePhotoOptions = PHFetchOptions()
@@ -94,7 +86,6 @@ class DataViewController: UIViewController {
     func iterateOverMediatype(_ fetchResult: PHFetchResult<PHAsset>) -> Double{
         if(fetchResult.count > 0){
             var totalMemory = 0.0
-            
             for i in 0..<fetchResult.count{
                 let asset = fetchResult.object(at: i)
                 let memoryUsage = getMemoryUsage(for: asset)
@@ -115,7 +106,6 @@ class DataViewController: UIViewController {
     func iterateOverMediatypePHAssets(_ fetchResult: [PHAsset]) -> Double{
         if(fetchResult.count > 0){
             var totalMemory = 0.0
-            
             for i in 0..<fetchResult.count{
                 let asset = fetchResult[i]
                 let memoryUsage = getMemoryUsage(for: asset)
@@ -134,9 +124,7 @@ class DataViewController: UIViewController {
     }
     
     func getCommonImages(_ commonImageResult: PHFetchResult<PHAsset>,_ livePhotoResult: PHFetchResult<PHAsset>,_ panoramaResult: PHFetchResult<PHAsset>) -> [PHAsset]{
-        
         var onlyImages: [PHAsset] = [PHAsset]()
-        
         for i in 0..<commonImageResult.count{
             let x = commonImageResult.object(at: i)
             var isUnique = true;
@@ -163,7 +151,6 @@ class DataViewController: UIViewController {
         let imageManager = PHImageManager.default()
         let requestOptions = PHImageRequestOptions()
         requestOptions.isSynchronous = true
-        
         var imageData: Data?
         imageManager.requestImageDataAndOrientation(for: asset, options: requestOptions){(data, _, _, _) in
             imageData = data
@@ -174,7 +161,6 @@ class DataViewController: UIViewController {
     func getMemoryUsageVideo(_ fetchResult: PHFetchResult<PHAsset>) -> Double{
         if fetchResult.count > 0 {
             var totalMemory = 0.0
-            
             for i in 0..<fetchResult.count {
                 let asset = fetchResult.object(at:i)
                 let resource = PHAssetResource.assetResources(for: asset).first
@@ -192,16 +178,6 @@ class DataViewController: UIViewController {
     }
     
     func deleteAllImages(_ assetsToDelete: [PHAsset]){
-        /*
-        let fetchOptions = PHFetchOptions()
-        let fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
-        
-        var assetsToDelete = [PHAsset]()
-        fetchResult.enumerateObjects { (asset, _, _) in
-            assetsToDelete.append(asset)
-        }
-         */
-        
         PHPhotoLibrary.shared().performChanges({
             PHAssetChangeRequest.deleteAssets(assetsToDelete as NSArray)
         }, completionHandler: {success, error in
@@ -218,7 +194,6 @@ class DataViewController: UIViewController {
     
     func getStorageCapacity() -> Int{
         let fileManager = FileManager.default
-        
         do{
             let attributes = try fileManager.attributesOfFileSystem(forPath: NSHomeDirectory() as String)
             let totalSpace = attributes[FileAttributeKey.systemSize] as? NSNumber
@@ -233,7 +208,6 @@ class DataViewController: UIViewController {
     
     func getFreeStorageCapacity() -> Int{
         let fileManager = FileManager.default
-        
         do{
             let attributes = try fileManager.attributesOfFileSystem(forPath: NSHomeDirectory() as String)
             let totalSpace = attributes[FileAttributeKey.systemFreeSize] as? NSNumber
