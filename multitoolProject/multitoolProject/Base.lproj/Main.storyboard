@@ -45,7 +45,7 @@
                                 <rect key="frame" x="25" y="187" width="343" height="467"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CustomCell" rowHeight="200" id="usP-Kd-fSE" customClass="CustomTableViewCell" customModule="multitoolProject" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="faceCell" rowHeight="200" id="usP-Kd-fSE" customClass="CustomTableViewCell" customModule="multitoolProject" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="343" height="200"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="usP-Kd-fSE" id="vWc-gP-AgX">
@@ -54,6 +54,9 @@
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ixT-Tu-9qB">
                                                     <rect key="frame" x="10" y="10" width="323" height="180"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="150" id="Zb9-TT-v5V"/>
+                                                    </constraints>
                                                 </imageView>
                                             </subviews>
                                             <constraints>

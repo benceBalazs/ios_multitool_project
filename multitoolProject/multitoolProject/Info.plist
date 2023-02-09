@@ -3,7 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>To load and edit images and their data.</string>
+	<string>To load images and their data.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need permission to save and load</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>To add images</string>
 	<key>CFBundleIdentifier</key>
 	<string></string>
 	<key>UIApplicationSceneManifest</key>

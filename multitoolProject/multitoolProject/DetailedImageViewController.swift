@@ -10,14 +10,14 @@ import Photos
 
 class DetailedImageViewController: UIViewController {
     
-    var receivedAsset: PHAsset!
+    var receivedImage: UIImage!
     
     @IBOutlet weak var shownImage: UIImageView!
     
     override func viewWillAppear(_ animated: Bool) {
             print("Test")
-            print(receivedAsset!)
-            shownImage.image = receivedAsset.requestImage()
+            print(receivedImage!)
+            shownImage.image = receivedImage
             shownImage.contentMode = .scaleAspectFit
             shownImage.setNeedsDisplay()
     }
