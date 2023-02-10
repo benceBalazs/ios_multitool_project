@@ -19,6 +19,9 @@ class DataViewController: UIViewController {
     @IBOutlet weak var panoramaStorage: UILabel!
     @IBOutlet weak var videoStorage: UILabel!
     
+    @IBOutlet weak var storage: UILabel!
+    @IBOutlet weak var freeStorage: UILabel!
+    
     private var commonPhotos = [PHAsset]()
     
     @IBAction func loadEverything(_ sender: UIButton) {
@@ -81,6 +84,12 @@ class DataViewController: UIViewController {
         let memoryUsageVideo = round(getMemoryUsageVideo(fetchResultVideo)*10)/10
         videoStorage.text = "\(memoryUsageVideo) in MiB"
         video.text = "Videos: \(fetchResultVideo.count)"
+        
+        let storageCapacity = getStorageCapacity()
+        let freeStorageCapacity = getFreeStorageCapacity()
+        
+        storage.text = "Gesamtkapazität: \(storageCapacity) MiB"
+        freeStorage.text = "Freier Speicher: \(freeStorageCapacity) MiB"
     }
     
     func iterateOverMediatype(_ fetchResult: PHFetchResult<PHAsset>) -> Double{

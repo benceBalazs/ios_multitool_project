@@ -18,13 +18,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Photo Data Editor" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UFb-3z-3u5">
-                                <rect key="frame" x="25" y="117" width="343" height="39"/>
+                                <rect key="frame" x="25" y="117" width="343" height="42"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="30"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="NVX-5b-dSD">
-                                <rect key="frame" x="25" y="209.00000000000003" width="343" height="388.66666666666674"/>
+                                <rect key="frame" x="25" y="208.99999999999997" width="343" height="479.33333333333326"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="foq-cj-RsH">
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="59.666666666666664"/>
@@ -94,13 +94,30 @@
                                             </label>
                                         </subviews>
                                     </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="G0Z-26-hzx">
+                                        <rect key="frame" x="0.0" y="438.66666666666663" width="343" height="40.666666666666686"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QRU-ae-CFB">
+                                                <rect key="frame" x="0.0" y="0.0" width="343" height="20.333333333333332"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wai-Jb-2gO">
+                                                <rect key="frame" x="0.0" y="20.333333333333371" width="343" height="20.333333333333329"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="FUo-Bm-eS8">
-                                <rect key="frame" x="25" y="704" width="343" height="40"/>
+                                <rect key="frame" x="25" y="709" width="343" height="35"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1nf-bP-ko1">
-                                        <rect key="frame" x="0.0" y="0.0" width="159" height="40"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="159" height="35"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Load">
                                             <fontDescription key="titleFontDescription" name="Futura-Medium" family="Futura" pointSize="20"/>
@@ -110,7 +127,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bzd-yd-uc7">
-                                        <rect key="frame" x="184" y="0.0" width="159" height="40"/>
+                                        <rect key="frame" x="184" y="0.0" width="159" height="35"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Delete Images">
                                             <fontDescription key="titleFontDescription" name="Futura-Medium" family="Futura" pointSize="20"/>
@@ -131,7 +148,9 @@
                             <constraint firstItem="UFb-3z-3u5" firstAttribute="leading" secondItem="cgm-mg-144" secondAttribute="leading" constant="25" id="SB8-U8-8lr"/>
                             <constraint firstItem="cgm-mg-144" firstAttribute="trailing" secondItem="UFb-3z-3u5" secondAttribute="trailing" constant="25" id="SNv-tb-Nrd"/>
                             <constraint firstItem="cgm-mg-144" firstAttribute="bottom" secondItem="FUo-Bm-eS8" secondAttribute="bottom" constant="25" id="aTq-bS-KPf"/>
+                            <constraint firstItem="FUo-Bm-eS8" firstAttribute="top" secondItem="UFb-3z-3u5" secondAttribute="bottom" constant="550" id="ftS-iK-i1U"/>
                             <constraint firstItem="cgm-mg-144" firstAttribute="trailing" secondItem="NVX-5b-dSD" secondAttribute="trailing" constant="25" id="iIp-AI-htI"/>
+                            <constraint firstItem="NVX-5b-dSD" firstAttribute="top" secondItem="UFb-3z-3u5" secondAttribute="bottom" constant="50" id="pGa-Z2-mHF"/>
                             <constraint firstItem="NVX-5b-dSD" firstAttribute="top" secondItem="cgm-mg-144" secondAttribute="top" constant="150" id="pvX-IQ-8kQ"/>
                             <constraint firstItem="UFb-3z-3u5" firstAttribute="top" secondItem="cgm-mg-144" secondAttribute="top" constant="58" id="wZk-UL-ggJ"/>
                         </constraints>
@@ -142,10 +161,12 @@
                     <connections>
                         <outlet property="commonPhoto" destination="MgQ-I5-ct8" id="9Aj-D7-Yke"/>
                         <outlet property="commonPhotoStorage" destination="a2S-qJ-icU" id="lZt-dm-KWd"/>
+                        <outlet property="freeStorage" destination="wai-Jb-2gO" id="STj-IL-Eg9"/>
                         <outlet property="livePhoto" destination="sul-ip-CqU" id="hJT-ID-XyX"/>
                         <outlet property="livePhotoStorage" destination="w5x-Fl-CY3" id="0mL-uV-pVe"/>
                         <outlet property="panorama" destination="HQA-4C-x6u" id="Stl-8J-e6e"/>
                         <outlet property="panoramaStorage" destination="snu-VD-s1i" id="hT1-Yd-qL9"/>
+                        <outlet property="storage" destination="QRU-ae-CFB" id="okD-TQ-l37"/>
                         <outlet property="video" destination="m6M-1w-9YH" id="49O-yK-YZX"/>
                         <outlet property="videoStorage" destination="3jW-44-9MF" id="aGw-Wj-yoy"/>
                     </connections>
